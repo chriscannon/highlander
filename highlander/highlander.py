@@ -13,7 +13,13 @@ def one(f):
     @wraps(f)
     def decorator():
         pid_file = realpath(join(getcwd(), '.pid'))
+        if _is_running(pid_file):
+            exit(0)
         _set_running(pid_file)
+        try:
+            f()
+        finally:
+            unlink(pid_file)
 
     return decorator
 
