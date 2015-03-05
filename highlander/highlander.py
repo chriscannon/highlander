@@ -29,6 +29,9 @@ def _is_running():
 
 
 def _read_pid_file(filename):
+    if not isfile(str(filename)):
+        return None
+
     with open(filename, 'r') as f:
         pid, create_time = f.read().split(',')
     return Process(int(pid))
