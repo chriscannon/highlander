@@ -38,6 +38,9 @@ def _read_pid_file(filename):
 
 
 def _set_running(filename):
+    if isfile(str(filename)):
+        raise Exception('PID file already exists.')
+
     p = Process()
     with open(filename, 'w') as f:
         f.write('{},{}'.format(p.pid, p.create_time()))
