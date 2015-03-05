@@ -34,7 +34,7 @@ def _read_pid_file(filename):
 
     with open(filename, 'r') as f:
         pid, create_time = f.read().split(',')
-    return Process(int(pid))
+    return int(pid), float(create_time)
 
 
 def _set_running(filename):
