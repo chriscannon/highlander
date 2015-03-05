@@ -2,7 +2,6 @@ from functools import wraps
 from logging import getLogger
 from os import getcwd, unlink
 from os.path import join, realpath, isfile
-import pickle
 
 from psutil import Process
 
