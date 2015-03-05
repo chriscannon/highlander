@@ -41,7 +41,3 @@ def _set_running(filename):
     p = Process()
     with open(filename, 'w') as f:
         f.write('{},{}'.format(p.pid, p.create_time()))
-
-
-def _unlink_pid_file(f):
-    unlink(f)
