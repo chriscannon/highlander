@@ -3,7 +3,7 @@ from logging import getLogger
 from os import getcwd, unlink
 from os.path import join, realpath, isfile
 
-from psutil import Process
+from psutil import Process, NoSuchProcess
 
 
 logger = getLogger(__name__)
@@ -24,8 +24,22 @@ def one(f):
     return decorator
 
 
-def _is_running():
-    pass
+def _is_running(pid_file):
+    previous = _read_pid_file(pid_file)
+
+    if previous is None:
+        return False
+
+    try:
+        current = Process(previous[0])
+    except NoSuchProcess:
+        return False
+
+    if current.create_time() == previous[1]:
+        return True
+
+    unlink(pid_file)
+    return False
 
 
 def _read_pid_file(filename):
