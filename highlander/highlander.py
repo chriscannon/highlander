@@ -17,11 +17,13 @@ def one(call, pid_file=None):
 
     if _is_running(pid_file):
         exit(0)
+
     _set_running(pid_file)
     try:
-        return call()
+        result = call()
     finally:
         unlink(pid_file)
+    return result
 
 
 def _is_running(pid_file):
