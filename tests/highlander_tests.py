@@ -3,7 +3,8 @@ from tempfile import mkstemp
 from unittest import TestCase
 from highlander import InvalidPidFileError
 
-from highlander.highlander import _read_pid_file, one
+from highlander.highlander import _read_pid_file
+from highlander import one
 
 
 class HighlanderTests(TestCase):
