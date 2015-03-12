@@ -1,27 +1,26 @@
-from functools import wraps
 from logging import getLogger
 from os import getcwd, unlink
 from os.path import join, realpath, isfile
 
 from psutil import Process, NoSuchProcess
+from funcy import decorator
 
 
 logger = getLogger(__name__)
 
 
-def one(f):
-    @wraps(f)
-    def decorator():
+@decorator
+def one(call, pid_file=None):
+    if not pid_file:
         pid_file = realpath(join(getcwd(), '.pid'))
-        if _is_running(pid_file):
-            exit(0)
-        _set_running(pid_file)
-        try:
-            f()
-        finally:
-            unlink(pid_file)
 
-    return decorator
+    if _is_running(pid_file):
+        exit(0)
+    _set_running(pid_file)
+    try:
+        return call()
+    finally:
+        unlink(pid_file)
 
 
 def _is_running(pid_file):
