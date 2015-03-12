@@ -5,6 +5,7 @@ from os.path import join, realpath, isfile
 from psutil import Process, NoSuchProcess
 from funcy import decorator
 
+from .exceptions import InvalidPidFileError, PidFileExistsError
 
 logger = getLogger(__name__)
 
@@ -45,14 +46,19 @@ def _read_pid_file(filename):
     if not isfile(str(filename)):
         return None
 
-    with open(filename, 'r') as f:
-        pid, create_time = f.read().split(',')
-    return int(pid), float(create_time)
+    try:
+        with open(filename, 'r') as f:
+            pid, create_time = f.read().split(',')
+        pid, create_time = int(pid), float(create_time)
+    except ValueError:
+        raise InvalidPidFileError()
+
+    return pid, create_time
 
 
 def _set_running(filename):
     if isfile(str(filename)):
-        raise Exception('PID file already exists.')
+        raise PidFileExistsError()
 
     p = Process()
     with open(filename, 'w') as f:
