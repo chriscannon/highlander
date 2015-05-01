@@ -68,5 +68,6 @@ def _set_running(filename):
 
 
 def _delete(filename):
-    if isfile(filename):
-        unlink(filename)
+    if not isfile(filename):
+        raise InvalidPidFileError()
+    unlink(filename)
