@@ -22,7 +22,7 @@ def one(call, pid_file=None):
     try:
         result = call()
     finally:
-        unlink(pid_file)
+        _delete(pid_file)
     return result
 
 
@@ -40,7 +40,7 @@ def _is_running(pid_file):
     if current.create_time() == previous[1]:
         return True
 
-    unlink(pid_file)
+    _delete(pid_file)
     return False
 
 
@@ -65,3 +65,8 @@ def _set_running(filename):
     p = Process()
     with open(filename, 'w') as f:
         f.write('{},{}'.format(p.pid, p.create_time()))
+
+
+def _delete(filename):
+    if isfile(filename):
+        unlink(filename)
