@@ -16,7 +16,7 @@ def one(call, pid_file=None):
         pid_file = realpath(join(getcwd(), '.pid'))
 
     if _is_running(pid_file):
-        exit(0)
+        exit(1)
 
     _set_running(pid_file)
     try:
