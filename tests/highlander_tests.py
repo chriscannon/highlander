@@ -30,6 +30,10 @@ class HighlanderTests(TestCase):
         self.assertRaises(InvalidPidFileError, _read_pid_file, filename)
         unlink(filename)
 
+    def read_empty_pid_file_test(self):
+        _, filename = mkstemp()
+        self.assertRaises(InvalidPidFileError, _read_pid_file, filename)
+        unlink(filename)
 
     def decorator_test(self):
         @one('/tmp/.pid')
