@@ -1,7 +1,9 @@
 from os import unlink
-from tempfile import mkstemp
+import shutil
+from tempfile import mkstemp, mkdtemp
 from unittest import TestCase
-from os.path import isfile
+from os.path import isfile, realpath, join
+from psutil import Process
 from highlander import InvalidPidFileError, PidFileExistsError
 
 from highlander.highlander import _read_pid_file, _delete, _set_running
@@ -36,10 +38,13 @@ class HighlanderTests(TestCase):
         unlink(filename)
 
     def decorator_test(self):
-        @one('/tmp/.pid')
+        d = mkdtemp()
+        pid_file = realpath(join(d, '.pid'))
+        @one(pid_file)
         def f():
             print 'hello'
         f()
+        shutil.rmtree(d)
 
     def delete_valid_file_test(self):
         _, f = mkstemp()
