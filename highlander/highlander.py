@@ -50,7 +50,7 @@ def _read_pid_file(filename):
 
     try:
         with open(filename, 'r') as f:
-            pid, create_time = f.read().split(',')
+            pid, create_time = f.read().split()
         pid, create_time = int(pid), float(create_time)
     except ValueError:
         raise InvalidPidFileError()
@@ -64,7 +64,7 @@ def _set_running(filename):
 
     p = Process()
     with open(filename, 'w') as f:
-        f.write('{},{}'.format(p.pid, p.create_time()))
+        f.write('{} {:.6f}'.format(p.pid, p.create_time()))
 
 
 def _delete(filename):

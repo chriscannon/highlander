@@ -16,7 +16,7 @@ class HighlanderTests(TestCase):
         _, filename = mkstemp()
         try:
             with open(filename, 'w') as f:
-                f.write('123,123.12')
+                f.write('123 123.12')
             pid, create_time = _read_pid_file(filename)
             self.assertEquals(123, pid)
             self.assertEquals(123.12, create_time)
