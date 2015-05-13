@@ -57,3 +57,14 @@ class HighlanderTests(TestCase):
     def running_file_exists_test(self):
         _, f = mkstemp()
         self.assertRaises(PidFileExistsError, _set_running, f)
+
+    def running_valid_file_test(self):
+        d = mkdtemp()
+        f = realpath(join(d, '.pid'))
+        _set_running(f)
+        with open(f, 'r') as pid_file:
+            process_info = pid_file.read().split()
+        p = Process()
+        self.assertEquals(p.pid, int(process_info[0]))
+        self.assertEquals(p.create_time(), float(process_info[1]))
+        shutil.rmtree(d)
