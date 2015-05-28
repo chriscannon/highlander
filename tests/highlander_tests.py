@@ -91,8 +91,8 @@ class HighlanderTests(TestCase):
         _, f = mkstemp()
         try:
             with open(f, 'w') as pid_file:
-                pid_file.write('-1 1.1')
-            self.assertFalse(_is_running(pid_file))
+                pid_file.write('99999999999 1.1')
+            self.assertFalse(_is_running(f))
         finally:
             unlink(f)
 
