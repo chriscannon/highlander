@@ -46,7 +46,7 @@ def _is_running(pid_file):
 
 def _read_pid_file(filename):
     if not isfile(str(filename)):
-        return None
+        raise InvalidPidFileError()
 
     try:
         with open(filename, 'r') as f:
