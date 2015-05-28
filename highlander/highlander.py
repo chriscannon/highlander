@@ -30,12 +30,14 @@ def _is_running(pid_file):
     if not isfile(str(pid_file)):
         return False
 
+    pid, create_time = _read_pid_file(pid_file)
+
     try:
-        current = Process(previous[0])
+        current = Process(pid)
     except NoSuchProcess:
         return False
 
-    if current.create_time() == previous[1]:
+    if current.create_time() == create_time:
         return True
 
     _delete(pid_file)
@@ -49,11 +51,9 @@ def _read_pid_file(filename):
     try:
         with open(filename, 'r') as f:
             pid, create_time = f.read().split()
-        pid, create_time = int(pid), float(create_time)
+        return int(pid), float(create_time)
     except ValueError:
         raise InvalidPidFileError()
-
-    return pid, create_time
 
 
 def _set_running(filename):
