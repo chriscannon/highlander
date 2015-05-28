@@ -12,7 +12,7 @@ from highlander import one
 
 class HighlanderTests(TestCase):
     def read_pid_no_file_test(self):
-        self.assertFalse(_read_pid_file(None))
+        self.assertRaises(InvalidPidFileError, _read_pid_file, None)
 
     def read_valid_pid_file_test(self):
         _, filename = mkstemp()
