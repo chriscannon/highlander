@@ -27,9 +27,7 @@ def one(call, pid_file=None):
 
 
 def _is_running(pid_file):
-    previous = _read_pid_file(pid_file)
-
-    if previous is None:
+    if not isfile(str(pid_file)):
         return False
 
     try:
