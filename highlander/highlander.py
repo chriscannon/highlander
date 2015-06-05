@@ -8,13 +8,11 @@ from funcy import decorator
 from .exceptions import InvalidPidFileError, PidFileExistsError
 
 logger = getLogger(__name__)
+default_location = realpath(join(getcwd(), '.pid'))
 
 
 @decorator
-def one(call, pid_file=None):
-    if not pid_file:
-        pid_file = realpath(join(getcwd(), '.pid'))
-
+def one(call, pid_file=default_location):
     if _is_running(pid_file):
         exit(1)
 
