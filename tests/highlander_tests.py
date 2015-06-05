@@ -1,8 +1,6 @@
 from os import unlink
 import shutil
 from tempfile import mkstemp, mkdtemp
-import threading
-from time import sleep
 from unittest import TestCase
 from os.path import isfile, realpath, join
 
@@ -127,19 +125,12 @@ class HighlanderTests(TestCase):
         try:
             @one(pid_file)
             def f1():
-                sleep(1)
+                f2()
 
             @one(pid_file)
             def f2():
                 print 'hello'
 
-            thread = threading.Thread(target=f1)
-            thread.start()
-
-            while True:
-                if thread.is_alive():
-                    f2()
-                    break
+            f1()
         finally:
-            thread.join()
             shutil.rmtree(d)
