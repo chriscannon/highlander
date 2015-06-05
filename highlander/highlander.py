@@ -14,7 +14,8 @@ default_location = realpath(join(getcwd(), '.pid'))
 @decorator
 def one(call, pid_file=default_location):
     if _is_running(pid_file):
-        exit(1)
+        logger.info('The process is already running.')
+        return
 
     _set_running(pid_file)
     try:

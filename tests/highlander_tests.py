@@ -127,15 +127,19 @@ class HighlanderTests(TestCase):
         try:
             @one(pid_file)
             def f1():
-                sleep(10)
+                sleep(1)
 
             @one(pid_file)
             def f2():
                 print 'hello'
 
-            thread = threading.Thread(target=f1, args=(), kwargs={})
+            thread = threading.Thread(target=f1)
             thread.start()
 
-            f2()
+            while True:
+                if thread.is_alive():
+                    f2()
+                    break
         finally:
+            thread.join()
             shutil.rmtree(d)
