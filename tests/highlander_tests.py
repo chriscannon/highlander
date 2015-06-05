@@ -1,11 +1,14 @@
 from os import unlink
 import shutil
 from tempfile import mkstemp, mkdtemp
+import threading
+from time import sleep
 from unittest import TestCase
 from os.path import isfile, realpath, join
-from psutil import Process
-from highlander import InvalidPidFileError, PidFileExistsError
 
+from psutil import Process
+
+from highlander import InvalidPidFileError, PidFileExistsError
 from highlander.highlander import _read_pid_file, _delete, _set_running, _is_running
 from highlander import one
 
@@ -117,3 +120,22 @@ class HighlanderTests(TestCase):
         finally:
             if isfile(f):
                 unlink(f)
+
+    def process_is_running_test(self):
+        d = mkdtemp()
+        pid_file = realpath(join(d, '.pid'))
+        try:
+            @one(pid_file)
+            def f1():
+                sleep(10)
+
+            @one(pid_file)
+            def f2():
+                print 'hello'
+
+            thread = threading.Thread(target=f1, args=(), kwargs={})
+            thread.start()
+
+            f2()
+        finally:
+            shutil.rmtree(d)
