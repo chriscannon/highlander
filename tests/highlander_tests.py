@@ -48,7 +48,7 @@ class HighlanderTests(TestCase):
         try:
             @one(pid_file)
             def f():
-                print 'hello'
+                print('hello')
             f()
         finally:
             shutil.rmtree(d)
@@ -129,7 +129,7 @@ class HighlanderTests(TestCase):
 
             @one(pid_file)
             def f2():
-                print 'hello'
+                print('hello')
 
             f1()
         finally:
