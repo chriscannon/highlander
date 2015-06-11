@@ -137,7 +137,7 @@ class HighlanderTests(TestCase):
             shutil.rmtree(d)
 
 
-def test_suite():
+def get_suite():
     loader = TestLoader()
     suite = TestSuite()
     suite.addTest(loader.loadTestsFromTestCase(HighlanderTests))

@@ -30,5 +30,5 @@ setup(
     ],
     download_url='https://github.com/chriscannon/highlander/tarball/{0}'.format(__version__),
     packages=['highlander'],
-    test_suite='tests.highlander_tests.test_suite',
+    test_suite='tests.highlander_tests.get_suite',
 )
