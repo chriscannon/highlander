@@ -11,11 +11,11 @@ from highlander.highlander import _read_pid_file, _delete, _set_running, _is_run
 from highlander import one
 
 
-    def read_pid_no_file_test(self):
 class HighlanderTestCase(TestCase):
+    def test_read_pid_no_file(self):
         self.assertRaises(InvalidPidFileError, _read_pid_file, None)
 
-    def read_valid_pid_file_test(self):
+    def test_read_valid_pid_file(self):
         _, filename = mkstemp()
         try:
             with open(filename, 'w') as f:
@@ -26,7 +26,7 @@ class HighlanderTestCase(TestCase):
         finally:
             unlink(filename)
 
-    def read_invalid_pid_file_test(self):
+    def test_read_invalid_pid_file(self):
         _, filename = mkstemp()
         try:
             with open(filename, 'w') as f:
@@ -35,14 +35,14 @@ class HighlanderTestCase(TestCase):
         finally:
             unlink(filename)
 
-    def read_empty_pid_file_test(self):
+    def test_read_empty_pid_file(self):
         _, filename = mkstemp()
         try:
             self.assertRaises(InvalidPidFileError, _read_pid_file, filename)
         finally:
             unlink(filename)
 
-    def decorator_test(self):
+    def test_decorator(self):
         d = mkdtemp()
         pid_file = realpath(join(d, '.pid'))
         try:
@@ -54,7 +54,7 @@ class HighlanderTestCase(TestCase):
         finally:
             shutil.rmtree(d)
 
-    def delete_valid_file_test(self):
+    def test_delete_valid_file(self):
         _, f = mkstemp()
         try:
             _delete(f)
@@ -63,17 +63,17 @@ class HighlanderTestCase(TestCase):
             if isfile(f):
                 unlink(f)
 
-    def delete_invalid_file_test(self):
+    def test_delete_invalid_file(self):
         self.assertRaises(InvalidPidFileError, _delete, 'not_a_file')
 
-    def running_file_exists_test(self):
+    def test_running_file_exists(self):
         _, f = mkstemp()
         try:
             self.assertRaises(PidFileExistsError, _set_running, f)
         finally:
             unlink(f)
 
-    def running_valid_file_test(self):
+    def test_running_valid_file(self):
         d = mkdtemp()
         f = realpath(join(d, '.pid'))
         try:
@@ -86,10 +86,10 @@ class HighlanderTestCase(TestCase):
         finally:
             shutil.rmtree(d)
 
-    def invalid_file_is_running_test(self):
+    def test_invalid_file_is_running(self):
         self.assertFalse(_is_running(None))
 
-    def no_process_is_running_test(self):
+    def test_no_process_is_running(self):
         _, f = mkstemp()
         try:
             with open(f, 'w') as pid_file:
@@ -98,7 +98,7 @@ class HighlanderTestCase(TestCase):
         finally:
             unlink(f)
 
-    def valid_is_running_test(self):
+    def test_valid_is_running(self):
         p = Process()
         _, f = mkstemp()
         try:
@@ -108,7 +108,7 @@ class HighlanderTestCase(TestCase):
         finally:
             unlink(f)
 
-    def create_time_mismatch_is_running_test(self):
+    def test_create_time_mismatch_is_running(self):
         p = Process()
         _, f = mkstemp()
         try:
@@ -120,7 +120,7 @@ class HighlanderTestCase(TestCase):
             if isfile(f):
                 unlink(f)
 
-    def process_is_running_test(self):
+    def test_process_is_running(self):
         d = mkdtemp()
         pid_file = realpath(join(d, '.pid'))
         try:
