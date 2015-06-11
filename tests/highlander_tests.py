@@ -102,7 +102,7 @@ class HighlanderTests(TestCase):
         _, f = mkstemp()
         try:
             with open(f, 'w') as pid_file:
-                pid_file.write('{} {:6f}'.format(p.pid, p.create_time()))
+                pid_file.write('{0} {1:6f}'.format(p.pid, p.create_time()))
             self.assertTrue(_is_running(f))
         finally:
             unlink(f)
@@ -112,7 +112,7 @@ class HighlanderTests(TestCase):
         _, f = mkstemp()
         try:
             with open(f, 'w') as pid_file:
-                pid_file.write('{} 1.1'.format(p.pid))
+                pid_file.write('{0} 1.1'.format(p.pid))
             self.assertFalse(_is_running(f))
             self.assertFalse(isfile(f))
         finally:

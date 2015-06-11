@@ -61,7 +61,7 @@ def _set_running(filename):
 
     p = Process()
     with open(filename, 'w') as f:
-        f.write('{} {:.6f}'.format(p.pid, p.create_time()))
+        f.write('{0} {1:.6f}'.format(p.pid, p.create_time()))
 
 
 def _delete(filename):
