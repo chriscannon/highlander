@@ -11,8 +11,8 @@ from highlander.highlander import _read_pid_file, _delete, _set_running, _is_run
 from highlander import one
 
 
-class HighlanderTests(TestCase):
     def read_pid_no_file_test(self):
+class HighlanderTestCase(TestCase):
         self.assertRaises(InvalidPidFileError, _read_pid_file, None)
 
     def read_valid_pid_file_test(self):
@@ -140,9 +140,9 @@ class HighlanderTests(TestCase):
 def get_suite():
     loader = TestLoader()
     suite = TestSuite()
-    suite.addTest(loader.loadTestsFromTestCase(HighlanderTests))
+    suite.addTest(loader.loadTestsFromTestCase(HighlanderTestCase))
     return suite
 
 
 if __name__ == '__main__':
-    TextTestRunner(verbosity=2).run(test_suite())
+    TextTestRunner(verbosity=2).run(get_suite())
