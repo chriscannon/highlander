@@ -1,7 +1,7 @@
 from os import unlink
 import shutil
 from tempfile import mkstemp, mkdtemp
-from unittest import TestCase
+from unittest import TestCase, TestLoader, TestSuite, TextTestRunner
 from os.path import isfile, realpath, join
 
 from psutil import Process
@@ -49,6 +49,7 @@ class HighlanderTests(TestCase):
             @one(pid_file)
             def f():
                 print('hello')
+
             f()
         finally:
             shutil.rmtree(d)
@@ -134,3 +135,14 @@ class HighlanderTests(TestCase):
             f1()
         finally:
             shutil.rmtree(d)
+
+
+def test_suite():
+    loader = TestLoader()
+    suite = TestSuite()
+    suite.addTest(loader.loadTestsFromTestCase(HighlanderTests))
+    return suite
+
+
+if __name__ == '__main__':
+    TextTestRunner(verbosity=2).run(test_suite())
