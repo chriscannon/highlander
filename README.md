@@ -36,3 +36,9 @@ Examples
     @one('/tmp/pid_file') # Create a PID file in a user-specified directory.
     def long_running_operation():
         ...
+
+TODO
+====
+* Add an argument to specify a timeout.
+* Add an exclusive file lock to the process information file. I realize a
+race condition exists without this, but I want to release early and often.
