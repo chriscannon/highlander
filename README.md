@@ -19,7 +19,7 @@ executes the function associated with the decorator.
 
 Installation
 ============
-    pip install highlander
+    pip install highlander-one
   
 
 Examples

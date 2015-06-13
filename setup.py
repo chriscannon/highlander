@@ -4,7 +4,7 @@ from setuptools import setup
 __version__ = '0.1.0b1'
 
 setup(
-    name='highlander',
+    name='highlander-one',
     version=__version__,
     author='Christopher T. Cannon',
     author_email='christophertcannon@gmail.com',
