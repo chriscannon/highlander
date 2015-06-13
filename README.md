@@ -26,7 +26,7 @@ Examples
 ========
     from highlander import one
     
-    @one # Create a PID file in the current working directory.
+    @one() # Create a PID file in the current working directory.
     def long_running_operation():
         ...
         
