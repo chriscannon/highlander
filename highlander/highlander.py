@@ -13,6 +13,13 @@ default_location = realpath(join(getcwd(), '.pid'))
 
 @decorator
 def one(call, pid_file=default_location):
+    """ Check if the call is already running. If so, bail out. If not, create a
+    file that contains the process identifier (PID) and creation time. After call
+    has completed, remove the process information file.
+    :param call: The original function using the @one decorator.
+    :param pid_file: The name of the file where the process information will be written.
+    :return: The output of the original function.
+    """
     if _is_running(pid_file):
         logger.info('The process is already running.')
         return
@@ -26,6 +33,10 @@ def one(call, pid_file=default_location):
 
 
 def _is_running(pid_file):
+    """ Determine whether or not the process is currently running.
+    :param pid_file: The PID file containing the process information.
+    :return: Whether or not the process is currently running.
+    """
     if not isfile(str(pid_file)):
         return False
 
@@ -44,6 +55,10 @@ def _is_running(pid_file):
 
 
 def _read_pid_file(filename):
+    """Read the current process information from disk.
+    :param filename: The name of the file containing the process information.
+    :return: The PID and creation time of the current running process.
+    """
     if not isfile(str(filename)):
         raise InvalidPidFileError()
 
@@ -56,6 +71,9 @@ def _read_pid_file(filename):
 
 
 def _set_running(filename):
+    """Write the current process information to disk.
+    :param filename: The name of the file where the process information will be written.
+    """
     if isfile(str(filename)):
         raise PidFileExistsError()
 
@@ -65,7 +83,9 @@ def _set_running(filename):
 
 
 def _delete(filename):
-    if not isfile(filename):
+    """Delete a file on disk.
+    :param filename: The name of the file to be deleted.
+    """
     if not isfile(str(filename)):
         raise InvalidPidFileError()
     unlink(filename)
