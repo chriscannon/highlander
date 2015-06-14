@@ -3,3 +3,6 @@ class InvalidPidFileError(Exception):
 
 class PidFileExistsError(Exception):
     """ An exception when a PID file already exists."""
+
+class InvalidPidDirectoryError(Exception):
+    """ An exception when an invalid PID directory is detected."""
