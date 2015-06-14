@@ -93,9 +93,16 @@ def _set_running(directory):
         f.write('{0} {1:.6f}'.format(p.pid, p.create_time()))
 
 
-def _delete(filename):
-    """Delete a file on disk.
-    :param filename: The name of the file to be deleted.
+def _delete(directory):
+    """Delete the process information directory on disk.
+    :param directory: The name of the directory to be deleted.
+    """
+    try:
+        rmtree(directory)
+    except OSError:
+        raise InvalidPidDirectoryError
+
+
 def _get_pid_filename(directory):
     """Return the name of the process information file.
     :param directory: The name of the directory where the process information file
