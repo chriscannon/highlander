@@ -49,6 +49,10 @@ def _is_running(directory):
 
     if not directory_exists:
         return False
+
+    pid_file = _get_pid_filename(directory)
+
+    if not isfile(pid_file):
         return False
 
     pid, create_time = _read_pid_file(pid_file)
