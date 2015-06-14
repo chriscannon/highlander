@@ -8,12 +8,14 @@ Highlander is a decorator to help developers ensure that their python
 process is only running once. This is helpful when you have
 a python program running on a set schedule (i.e., a cron) and you do
 not want one run of the program to overlap with another run. Highlander
-accomplishes this by creating a file on disk that contains the current
+accomplishes this by creating a directory containing a file
+on disk that contains the current
 process identifier (PID) and creation time. If Highlander detects that
-a PID file currently exists it reads the PID and creation time from the
-file, checks to see if it exists. If it does exist, it ends the program
+the PID directory currently exists it reads the PID file inside
+it for the PID and creation time and checks to see if that process exists.
+If it does exist, it ends the program
 and logs that the program was already running. If it does not exist,
-Highlander removes the old process information file, creates a new one, and
+Highlander removes the old process information directory and file, creates new ones, and
 executes the function associated with the decorator.
 
 
@@ -24,21 +26,28 @@ Installation
 
 Examples
 ========
+An example using the default directory (i.e., current working directory):
+
     from highlander import one
     
-    @one() # Create a PID file in the current working directory.
-    def long_running_operation():
+    @one()
+    def run():
         ...
         
-        
+    if __name__ == '__main__':
+        run()
+      
+An example using a user-specified directory:
+
     from highlander import one
     
-    @one('/tmp/pid_file') # Create a PID file in a user-specified directory.
-    def long_running_operation():
+    @one('/tmp/.pid')
+    def run():
         ...
+        
+    if __name__ == '__main__':
+        run()
 
 TODO
 ====
 * Add an argument to specify a timeout.
-* Add an exclusive file lock to the process information file. I realize a
-race condition exists without this, but I want to release early and often.
