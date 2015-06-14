@@ -75,15 +75,12 @@ def _read_pid_file(filename):
     :param filename: The name of the file containing the process information.
     :return: The PID and creation time of the current running process.
     """
-    if not isfile(str(filename)):
-        raise InvalidPidFileError()
-
     try:
-        with open(filename, 'r') as f:
+        with open(str(filename), 'r') as f:
             pid, create_time = f.read().split()
         return int(pid), float(create_time)
-    except ValueError:
-        raise InvalidPidFileError()
+    except (IOError, ValueError):
+        raise InvalidPidFileError
 
 
 def _set_running(directory):
