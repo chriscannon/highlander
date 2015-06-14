@@ -10,11 +10,10 @@ process is only running once. This is helpful when you have
 a python program running on a set schedule (i.e., a cron) and you do
 not want one run of the program to overlap with another run. Highlander
 accomplishes this by creating a directory containing a file
-on disk that contains the current
-process identifier (PID) and creation time. If Highlander detects that
-the PID directory currently exists it reads the PID file inside
-it for the PID and creation time and checks to see if that process exists.
-If it does exist, it ends the program
+on disk that contains the current process identifier (PID) and 
+creation time. If Highlander detects that the PID directory currently 
+exists it reads the PID file inside it for the PID and creation time
+and checks to see if that process exists. If it does exist, it ends the program
 and logs that the program was already running. If it does not exist,
 Highlander removes the old process information directory and file, creates new ones, and
 executes the function associated with the decorator.
@@ -42,7 +41,7 @@ An example using a user-specified directory:
 
     from highlander import one
     
-    @one('/tmp/.pid')
+    @one('/tmp/my_app/.pid')
     def run():
         ...
         
