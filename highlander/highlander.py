@@ -96,7 +96,9 @@ def _set_running(directory):
 def _delete(filename):
     """Delete a file on disk.
     :param filename: The name of the file to be deleted.
+def _get_pid_filename(directory):
+    """Return the name of the process information file.
+    :param directory: The name of the directory where the process information file
+    is created.
     """
-    if not isfile(str(filename)):
-        raise InvalidPidFileError()
-    unlink(filename)
+    return realpath(join(str(directory), 'INFO'))
