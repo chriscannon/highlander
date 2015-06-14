@@ -1,3 +1,4 @@
+from errno import EEXIST
 from logging import getLogger
 from os import getcwd, unlink
 from os.path import join, realpath, isfile
@@ -37,7 +38,17 @@ def _is_running(directory):
     :param directory: The PID directory containing the process information.
     :return: Whether or not the process is currently running.
     """
-    if not isfile(str(pid_file)):
+    directory_exists = False
+    try:
+        mkdir(str(directory))
+    except OSError as e:
+        if e.errno == EEXIST:
+            directory_exists = True
+        else:
+            raise e
+
+    if not directory_exists:
+        return False
         return False
 
     pid, create_time = _read_pid_file(pid_file)
