@@ -138,7 +138,7 @@ class HighlanderTestCase(TestCase):
             def f2():
                 return True
 
-            self.assertIsNone(f1())
+            self.assertEquals(f1(), None)
         finally:
             rmtree(d)
 
