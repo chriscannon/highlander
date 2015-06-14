@@ -12,29 +12,29 @@ default_location = realpath(join(getcwd(), '.pid'))
 
 
 @decorator
-def one(call, pid_file=default_location):
+def one(call, pid_directory=default_location):
     """ Check if the call is already running. If so, bail out. If not, create a
     file that contains the process identifier (PID) and creation time. After call
     has completed, remove the process information file.
     :param call: The original function using the @one decorator.
-    :param pid_file: The name of the file where the process information will be written.
+    :param pid_directory: The name of the directory where the process information will be written.
     :return: The output of the original function.
     """
-    if _is_running(pid_file):
+    if _is_running(pid_directory):
         logger.info('The process is already running.')
         return
 
-    _set_running(pid_file)
+    _set_running(pid_directory)
     try:
         result = call()
     finally:
-        _delete(pid_file)
+        _delete(pid_directory)
     return result
 
 
-def _is_running(pid_file):
+def _is_running(directory):
     """ Determine whether or not the process is currently running.
-    :param pid_file: The PID file containing the process information.
+    :param directory: The PID directory containing the process information.
     :return: Whether or not the process is currently running.
     """
     if not isfile(str(pid_file)):
@@ -50,7 +50,7 @@ def _is_running(pid_file):
     if current.create_time() == create_time:
         return True
 
-    _delete(pid_file)
+    _delete(directory)
     return False
 
 
@@ -70,9 +70,9 @@ def _read_pid_file(filename):
         raise InvalidPidFileError()
 
 
-def _set_running(filename):
+def _set_running(directory):
     """Write the current process information to disk.
-    :param filename: The name of the file where the process information will be written.
+    :param directory: The name of the directory where the process information will be written.
     """
     if isfile(str(filename)):
         raise PidFileExistsError()
