@@ -1,12 +1,13 @@
 from errno import EEXIST
 from logging import getLogger
-from os import getcwd, unlink
+from os import getcwd, mkdir
 from os.path import join, realpath, isfile
+from shutil import rmtree
 
 from psutil import Process, NoSuchProcess
 from funcy import decorator
 
-from .exceptions import InvalidPidFileError, PidFileExistsError
+from .exceptions import InvalidPidFileError, PidFileExistsError, InvalidPidDirectoryError
 
 logger = getLogger(__name__)
 default_location = realpath(join(getcwd(), '.pid'))
