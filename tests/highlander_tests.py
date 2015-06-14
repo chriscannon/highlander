@@ -1,13 +1,13 @@
-from os import unlink
-import shutil
+from os import unlink, mkdir
 from tempfile import mkstemp, mkdtemp
 from unittest import TestCase, TestLoader, TestSuite, TextTestRunner
-from os.path import isfile, realpath, join
+from os.path import isfile, realpath, join, isdir
+from shutil import rmtree
 
 from psutil import Process
 
-from highlander import InvalidPidFileError, PidFileExistsError
-from highlander.highlander import _read_pid_file, _delete, _set_running, _is_running
+from highlander import InvalidPidFileError, PidFileExistsError, InvalidPidDirectoryError
+from highlander.highlander import _read_pid_file, _delete, _set_running, _is_running, _get_pid_filename
 from highlander import one
 
 
@@ -36,105 +36,117 @@ class HighlanderTestCase(TestCase):
             unlink(filename)
 
     def test_read_empty_pid_file(self):
-        _, filename = mkstemp()
-        try:
-            self.assertRaises(InvalidPidFileError, _read_pid_file, filename)
-        finally:
-            unlink(filename)
-
-    def test_decorator(self):
-        d = mkdtemp()
-        pid_file = realpath(join(d, '.pid'))
-        try:
-            @one(pid_file)
-            def f():
-                print('hello')
-
-            f()
-        finally:
-            shutil.rmtree(d)
-
-    def test_delete_valid_file(self):
         _, f = mkstemp()
         try:
-            _delete(f)
-            self.assertFalse(isfile(f))
-        finally:
-            if isfile(f):
-                unlink(f)
-
-    def test_delete_invalid_file(self):
-        self.assertRaises(InvalidPidFileError, _delete, 'not_a_file')
-
-    def test_running_file_exists(self):
-        _, f = mkstemp()
-        try:
-            self.assertRaises(PidFileExistsError, _set_running, f)
+            self.assertRaises(InvalidPidFileError, _read_pid_file, f)
         finally:
             unlink(f)
 
-    def test_running_valid_file(self):
+    def test_decorator(self):
         d = mkdtemp()
-        f = realpath(join(d, '.pid'))
+        pid_directory = realpath(join(d, '.pid'))
         try:
-            _set_running(f)
-            with open(f, 'r') as pid_file:
+            @one(pid_directory)
+            def f():
+                return True
+
+            self.assertTrue(f())
+        finally:
+            rmtree(d)
+
+    def test_delete_valid_directory(self):
+        d = mkdtemp()
+        try:
+            _delete(d)
+            self.assertFalse(isdir(d))
+        finally:
+            if isdir(d):
+                rmtree(d)
+
+    def test_delete_invalid_directory(self):
+        self.assertRaises(InvalidPidDirectoryError, _delete, 'not_a_directory')
+
+    def test_running_file_exists(self):
+        d = mkdtemp()
+        f = open(join(d, 'INFO'), 'w')
+        f.close()
+
+        try:
+            self.assertRaises(PidFileExistsError, _set_running, d)
+        finally:
+            rmtree(d)
+
+    def test_running_valid_file(self):
+        temp_d = mkdtemp()
+        d = realpath(join(temp_d, '.pid'))
+        mkdir(d)
+
+        try:
+            _set_running(d)
+            with open(join(d, 'INFO'), 'r') as pid_file:
                 process_info = pid_file.read().split()
             p = Process()
             self.assertEquals(p.pid, int(process_info[0]))
             self.assertEquals(p.create_time(), float(process_info[1]))
         finally:
-            shutil.rmtree(d)
-
-    def test_invalid_file_is_running(self):
-        self.assertFalse(_is_running(None))
+            rmtree(temp_d)
 
     def test_no_process_is_running(self):
-        _, f = mkstemp()
+        d = mkdtemp()
+        f = _get_pid_filename(d)
         try:
             with open(f, 'w') as pid_file:
                 pid_file.write('99999999999 1.1')
-            self.assertFalse(_is_running(f))
+            self.assertFalse(_is_running(d))
         finally:
-            unlink(f)
+            rmtree(d)
 
     def test_valid_is_running(self):
         p = Process()
-        _, f = mkstemp()
+        d = mkdtemp()
+        f = _get_pid_filename(d)
         try:
             with open(f, 'w') as pid_file:
                 pid_file.write('{0} {1:6f}'.format(p.pid, p.create_time()))
-            self.assertTrue(_is_running(f))
+            self.assertTrue(_is_running(d))
         finally:
-            unlink(f)
+            rmtree(d)
 
     def test_create_time_mismatch_is_running(self):
         p = Process()
-        _, f = mkstemp()
+        d = mkdtemp()
+        f = _get_pid_filename(d)
         try:
             with open(f, 'w') as pid_file:
                 pid_file.write('{0} 1.1'.format(p.pid))
-            self.assertFalse(_is_running(f))
+            self.assertFalse(_is_running(d))
             self.assertFalse(isfile(f))
+            self.assertFalse(isdir(d))
         finally:
-            if isfile(f):
-                unlink(f)
+            if isdir(d):
+                rmtree(d)
 
     def test_process_is_running(self):
         d = mkdtemp()
-        pid_file = realpath(join(d, '.pid'))
+        pid_directory = realpath(join(d, '.pid'))
         try:
-            @one(pid_file)
+            @one(pid_directory)
             def f1():
-                f2()
+                return f2()
 
-            @one(pid_file)
+            @one(pid_directory)
             def f2():
-                print('hello')
+                return True
 
-            f1()
+            self.assertIsNone(f1())
         finally:
-            shutil.rmtree(d)
+            rmtree(d)
+
+    def test_get_pid_filename(self):
+        self.assertEquals('/test/INFO', _get_pid_filename('/test'))
+
+    def test_other_os_error(self):
+        self.assertRaises(OSError, _is_running, '/')
 
 
 def get_suite():
