@@ -87,8 +87,9 @@ def _set_running(directory):
     """Write the current process information to disk.
     :param directory: The name of the directory where the process information will be written.
     """
+    filename = _get_pid_filename(directory)
     if isfile(str(filename)):
-        raise PidFileExistsError()
+        raise PidFileExistsError
 
     p = Process()
     with open(filename, 'w') as f:
