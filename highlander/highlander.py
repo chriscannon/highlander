@@ -1,4 +1,4 @@
-from errno import EEXIST, ENOENT
+from errno import EEXIST
 from logging import getLogger
 from os import getcwd, mkdir
 from os.path import join, realpath, isfile, isdir
@@ -77,6 +77,7 @@ def _is_locked(directory, remove_directory=False):
             raise e
     return False
 
+
 def _read_pid_file(filename):
     """Read the current process information from disk.
     :param filename: The name of the file containing the process information.
@@ -107,6 +108,7 @@ def _delete(directory):
     """Delete the process information directory on disk.
     :param directory: The name of the directory to be deleted.
     """
+    rmtree(str(directory), ignore_errors=True)
 
 
 def _get_pid_filename(directory):
