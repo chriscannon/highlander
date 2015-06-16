@@ -143,7 +143,7 @@ class HighlanderTestCase(TestCase):
         self.assertEquals('/test/INFO', _get_pid_filename('/test'))
 
     def test_other_os_error(self):
-        self.assertRaises(OSError, _is_running, 'a'*1000)
+        self.assertRaises(OSError, _is_running, 'a' * 1000)
 
 
 def get_suite():
