@@ -58,6 +58,27 @@ def _is_running(directory):
     return True
 
 
+def _is_locked(directory, remove_directory=False):
+    """ Attempt to acquire the lock through directory creation.
+    :param directory: The PID directory containing the process information.
+    :param remove_directory: Remove the directory before attempting to acquire
+    the lock because we know something went wrong and that the directory exists.
+    :return: True is the lock was acquired, False if it was not.
+    """
+    if remove_directory:
+        try:
+            _delete(directory)
+        except InvalidPidDirectoryError:
+            return True
+
+    try:
+        mkdir(str(directory))
+    except OSError as e:
+        if e.errno == EEXIST:
+            return True
+        else:
+            raise e
+    return False
 
 def _read_pid_file(filename):
     """Read the current process information from disk.
