@@ -118,7 +118,7 @@ class HighlanderTestCase(TestCase):
                 pid_file.write('{0} 1.1'.format(p.pid))
             self.assertFalse(_is_running(d))
             self.assertFalse(isfile(f))
-            self.assertFalse(isdir(d))
+            self.assertTrue(isdir(d))
         finally:
             if isdir(d):
                 rmtree(d)
