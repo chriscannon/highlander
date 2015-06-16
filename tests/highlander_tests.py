@@ -7,7 +7,7 @@ from shutil import rmtree
 from psutil import Process
 
 from highlander import InvalidPidFileError, PidFileExistsError
-from highlander.highlander import _read_pid_file, _delete, _set_running, _is_running, _get_pid_filename
+from highlander.highlander import _read_pid_file, _delete, _set_running, _is_running, _get_pid_filename, _is_locked
 from highlander import one
 
 
@@ -144,6 +144,21 @@ class HighlanderTestCase(TestCase):
 
     def test_other_os_error(self):
         self.assertRaises(OSError, _is_running, 'a' * 1000)
+
+    def test_directory_exists(self):
+        self.assertTrue(_is_locked(mkdtemp()))
+
+    def test_cleanup_invalid_pid_file(self):
+        d = mkdtemp()
+        f = _get_pid_filename(d)
+        try:
+            with open(f, 'w') as pid_file:
+                pid_file.write("#@$!")
+            self.assertFalse(_is_running(d))
+            self.assertFalse(isfile(f))
+            self.assertTrue(isdir(d))
+        finally:
+            rmtree(d)
 
 
 def get_suite():
