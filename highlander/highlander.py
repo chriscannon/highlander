@@ -50,7 +50,7 @@ def _is_running(directory):
     try:
         current = Process(pid)
     except NoSuchProcess:
-        return False
+        return _is_locked(directory, True)
 
     if current.create_time() == create_time:
         return True
