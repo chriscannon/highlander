@@ -1,4 +1,4 @@
-from errno import EEXIST
+from errno import EEXIST, ENOENT
 from logging import getLogger
 from os import getcwd, mkdir
 from os.path import join, realpath, isfile, isdir
@@ -111,9 +111,10 @@ def _delete(directory):
     :param directory: The name of the directory to be deleted.
     """
     try:
-        rmtree(directory)
-    except OSError:
-        raise InvalidPidDirectoryError
+        rmtree(str(directory))
+    except OSError as e:
+        if e.errno != ENOENT: # Only throw an error if it's something other than the directory not existing.
+            raise InvalidPidDirectoryError
 
 
 def _get_pid_filename(directory):
