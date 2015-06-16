@@ -37,7 +37,7 @@ def one(call, pid_directory=default_location):
 def _is_running(directory):
     """ Determine whether or not the process is currently running.
     :param directory: The PID directory containing the process information.
-    :return: Whether or not the process is currently running.
+    :return: True if there is another process running, False if there is not.
     """
     directory_exists = False
     try:
