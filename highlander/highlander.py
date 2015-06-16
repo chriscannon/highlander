@@ -1,7 +1,7 @@
 from errno import EEXIST
 from logging import getLogger
 from os import getcwd, mkdir
-from os.path import join, realpath, isfile
+from os.path import join, realpath, isfile, isdir
 from shutil import rmtree
 
 from psutil import Process, NoSuchProcess
@@ -39,14 +39,8 @@ def _is_running(directory):
     :param directory: The PID directory containing the process information.
     :return: True if there is another process running, False if there is not.
     """
-    directory_exists = False
-    try:
-        mkdir(str(directory))
-    except OSError as e:
-        if e.errno == EEXIST:
-            directory_exists = True
-        else:
-            raise e
+    if not isdir(str(directory)):
+        return _is_locked(directory)
 
     if not directory_exists:
         return False
