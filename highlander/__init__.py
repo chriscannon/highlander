@@ -1,8 +1,8 @@
 from .highlander import one
-from .exceptions import InvalidPidFileError, PidFileExistsError, InvalidPidDirectoryError
+from .exceptions import InvalidPidFileError, PidFileExistsError
 
 __all__ = [
     'one',
 
-    'InvalidPidFileError', 'PidFileExistsError', 'InvalidPidDirectoryError'
+    'InvalidPidFileError', 'PidFileExistsError'
 ]

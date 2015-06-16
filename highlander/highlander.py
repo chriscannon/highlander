@@ -7,7 +7,7 @@ from shutil import rmtree
 from psutil import Process, NoSuchProcess
 from funcy import decorator
 
-from .exceptions import InvalidPidFileError, PidFileExistsError, InvalidPidDirectoryError
+from .exceptions import InvalidPidFileError, PidFileExistsError
 
 logger = getLogger(__name__)
 default_location = realpath(join(getcwd(), '.pid'))
@@ -66,10 +66,7 @@ def _is_locked(directory, remove_directory=False):
     :return: True is the lock was acquired, False if it was not.
     """
     if remove_directory:
-        try:
-            _delete(directory)
-        except InvalidPidDirectoryError:
-            return True
+        _delete(directory)
 
     try:
         mkdir(str(directory))
@@ -110,11 +107,6 @@ def _delete(directory):
     """Delete the process information directory on disk.
     :param directory: The name of the directory to be deleted.
     """
-    try:
-        rmtree(str(directory))
-    except OSError as e:
-        if e.errno != ENOENT: # Only throw an error if it's something other than the directory not existing.
-            raise InvalidPidDirectoryError
 
 
 def _get_pid_filename(directory):

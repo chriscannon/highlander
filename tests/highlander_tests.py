@@ -6,7 +6,7 @@ from shutil import rmtree
 
 from psutil import Process
 
-from highlander import InvalidPidFileError, PidFileExistsError, InvalidPidDirectoryError
+from highlander import InvalidPidFileError, PidFileExistsError
 from highlander.highlander import _read_pid_file, _delete, _set_running, _is_running, _get_pid_filename
 from highlander import one
 
@@ -62,9 +62,6 @@ class HighlanderTestCase(TestCase):
         finally:
             if isdir(d):
                 rmtree(d)
-
-    def test_delete_invalid_directory(self):
-        self.assertRaises(InvalidPidDirectoryError, _delete, 'not_a_directory')
 
     def test_running_file_exists(self):
         d = mkdtemp()
