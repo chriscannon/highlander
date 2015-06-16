@@ -42,15 +42,10 @@ def _is_running(directory):
     if not isdir(str(directory)):
         return _is_locked(directory)
 
-    if not directory_exists:
-        return False
-
-    pid_file = _get_pid_filename(directory)
-
-    if not isfile(pid_file):
-        return False
-
-    pid, create_time = _read_pid_file(pid_file)
+    try:
+        pid, create_time = _read_pid_file(_get_pid_filename(directory))
+    except InvalidPidFileError:
+        return _is_locked(directory, True)
 
     try:
         current = Process(pid)
