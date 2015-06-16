@@ -55,8 +55,8 @@ def _is_running(directory):
     if current.create_time() != create_time:
         return _is_locked(directory, True)
 
-    _delete(directory)
-    return False
+    return True
+
 
 
 def _read_pid_file(filename):
