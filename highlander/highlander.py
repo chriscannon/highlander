@@ -52,8 +52,8 @@ def _is_running(directory):
     except NoSuchProcess:
         return _is_locked(directory, True)
 
-    if current.create_time() == create_time:
-        return True
+    if current.create_time() != create_time:
+        return _is_locked(directory, True)
 
     _delete(directory)
     return False
