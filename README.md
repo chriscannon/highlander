@@ -1,8 +1,9 @@
 # Highlander: There can be only one...
 [![Build Status](https://travis-ci.org/chriscannon/highlander.svg?branch=master)](https://travis-ci.org/chriscannon/highlander)
 [![Coverage Status](https://coveralls.io/repos/chriscannon/highlander/badge.svg)](https://coveralls.io/r/chriscannon/highlander)
-[![Downloads](http://gitshields.com/v2/pypi/highlander-one/month_down/green.png)](https://pypi.python.org/pypi/highlander-one)
-![Version](http://gitshields.com/v2/pypi/highlander-one/version/green.png)
+[![Downloads](https://img.shields.io/pypi/dm/highlander-one.svg)](https://pypi.python.org/pypi/highlander-one)
+![Version](https://img.shields.io/pypi/v/highlander-one.svg)
+![License](https://img.shields.io/pypi/l/highlander-one.svg)
 
 About
 =====
