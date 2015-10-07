@@ -66,7 +66,7 @@ this means is that when you attempt to run your program it will be unable to
 acquire the lock and your program will not run until you manually intervene and
 delete the lock file. My solution does not have this problem.
 
-3. If you are using the flock Unix tool in conjuction with your program its
+3. If you are using the flock Unix tool in conjunction with your program its
 default behavior is to hang until the lock file is free and then execute the command.
 In my opinion, this is not ideal default behaviour because you could have a ton of
 processes build up over time and waste resources. What Highlander does is essentially skip
